@@ -289,3 +289,4 @@ __pycache__/
 
 # MacOS
 .DS_Store
+/ImageResizeWebApp/ImageResizeWebApp/appsettings.Development.json
