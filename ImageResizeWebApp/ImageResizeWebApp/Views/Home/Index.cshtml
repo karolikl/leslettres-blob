@@ -86,7 +86,7 @@
             console.log(fetchedLetters)
             fetchedLetters.forEach(function (letter) {
 
-                var anchor = $("<a>").attr("href", letter.imageUrl);
+                var anchor = $("<a>").attr("href", "/letter/" + letter.blobName);
 
                 // Create an <img> element and set its src attribute
                 var img = $("<img>").attr("src", letter.imageUrl);

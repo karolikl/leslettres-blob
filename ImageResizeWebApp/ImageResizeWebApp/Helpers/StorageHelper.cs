@@ -110,5 +110,37 @@ namespace ImageResizeWebApp.Helpers
 
             return await Task.FromResult(letters);
         }
+
+        public static async Task<TranslatedLetter> GetLetter(AzureStorageConfig _storageConfig, string name)
+        {
+            TranslatedLetter letter = new TranslatedLetter();
+
+            // Create a URI to the storage account
+            Uri accountUri = new Uri("https://" + _storageConfig.AccountName + ".blob.core.windows.net/");
+            BlobServiceClient blobServiceClient = new BlobServiceClient(accountUri);
+
+            // Get reference to the container
+            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(_storageConfig.ImageContainer);
+
+            if (container.Exists())
+            {
+                letter.ImageUrl = container.Uri + "/" + name + ".jpg";
+
+                BlobContainerClient translatedContainer = blobServiceClient.GetBlobContainerClient(_storageConfig.TranslatedTextContainer);
+                if (translatedContainer.Exists())
+                {
+                    BlobClient blobClient = translatedContainer.GetBlobClient(letter.BlobNameWithJsonExtension);
+
+                    BlobDownloadInfo blobDownloadInfo = await blobClient.DownloadAsync();
+
+                    using (StreamReader reader = new StreamReader(blobDownloadInfo.Content, Encoding.UTF8))
+                    {
+                        string content = await reader.ReadToEndAsync();
+                        letter.TranslatedText = content;
+                    }
+                }
+            }
+            return await Task.FromResult(letter);
+        }
     }
 }

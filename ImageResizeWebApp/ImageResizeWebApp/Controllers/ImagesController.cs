@@ -59,7 +59,7 @@ namespace ImageResizeWebApp.Controllers
                 if (isUploaded)
                 {
                     if (storageConfig.TranslatedTextContainer != string.Empty)
-                        return new AcceptedAtActionResult("GetThumbNails", "Images", null, null);
+                        return new AcceptedAtActionResult("GetLetters", "Images", null, null);
                     else
                         return new AcceptedResult();
                 }
@@ -72,7 +72,7 @@ namespace ImageResizeWebApp.Controllers
             }
         }
 
-        // GET /api/images/thumbnails
+    /*    // GET /api/images/thumbnails
         [HttpGet("thumbnails")]
         public async Task<IActionResult> GetThumbNails()
         {
@@ -92,7 +92,7 @@ namespace ImageResizeWebApp.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
+        }*/
 
         // GET /api/images/thumbnails
         [HttpGet("letters")]

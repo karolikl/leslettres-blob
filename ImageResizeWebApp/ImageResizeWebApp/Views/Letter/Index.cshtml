@@ -1,0 +1,51 @@
+﻿@model ImageResizeWebApp.Models.TranslatedLetter
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+
+<div>
+        <h4>@Html.DisplayFor(model => model.BlobName)</h4>
+    <hr />
+        <img src="@Model.ImageUrl" height="500" />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ImageUrl)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ImageUrl)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BlobName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BlobName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.BlobNameWithJsonExtension)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.BlobNameWithJsonExtension)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TranslatedText)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TranslatedText)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="/">Back to List</a>
+</div>
+</body>
+</html>
