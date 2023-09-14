@@ -84,8 +84,34 @@ namespace ImageResizeWebApp.Controllers
                 if (storageConfig.ImageContainer == string.Empty)
                     return BadRequest("Please provide a name for your image container in Azure blob storage.");
 
-                List<string> imagelUrls = await StorageHelper.GetImageUrls(storageConfig);
+                //List<string> imagelUrls = await StorageHelper.GetImageUrls(storageConfig);
+                List<TranslatedLetter> imagelUrls = await StorageHelper.GetLetters(storageConfig);
                 return new ObjectResult(imagelUrls);            
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET /api/images/thumbnails
+        [HttpGet("letters")]
+        public async Task<IActionResult> GetLetters()
+        {
+            try
+            {
+                if (storageConfig.AccountKey == string.Empty || storageConfig.AccountName == string.Empty)
+                    return BadRequest("Sorry, can't retrieve your Azure storage details from appsettings.js, make sure that you add Azure storage details there.");
+
+                if (storageConfig.ImageContainer == string.Empty)
+                    return BadRequest("Please provide a name for your image container in Azure blob storage.");
+
+                if (storageConfig.TranslatedTextContainer == string.Empty)
+                    return BadRequest("Please provide a name for your translatedText container in Azure blob storage.");
+
+                //List<string> imagelUrls = await StorageHelper.GetImageUrls(storageConfig);
+                List<TranslatedLetter> imagelUrls = await StorageHelper.GetLetters(storageConfig);
+                return new ObjectResult(imagelUrls);
             }
             catch (Exception ex)
             {

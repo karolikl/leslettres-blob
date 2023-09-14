@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ImageResizeWebApp.Helpers
@@ -61,7 +62,7 @@ namespace ImageResizeWebApp.Helpers
             BlobServiceClient blobServiceClient = new BlobServiceClient(accountUri);
 
             // Get reference to the container
-            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(_storageConfig.TranslatedTextContainer);
+            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(_storageConfig.ImageContainer);
 
             if (container.Exists())
             {
@@ -72,6 +73,42 @@ namespace ImageResizeWebApp.Helpers
             }
 
             return await Task.FromResult(imageUrls);
+        }
+
+        public static async Task<List<TranslatedLetter>> GetLetters(AzureStorageConfig _storageConfig)
+        {
+            List<TranslatedLetter> letters = new List<TranslatedLetter>();
+            List<string> imageUrls = await GetImageUrls(_storageConfig);
+
+            // Create a URI to the storage account
+            Uri accountUri = new Uri("https://" + _storageConfig.AccountName + ".blob.core.windows.net/");
+
+            // Create BlobServiceClient from the account URI
+            BlobServiceClient blobServiceClient = new BlobServiceClient(accountUri);
+
+            // Get reference to the container
+            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(_storageConfig.TranslatedTextContainer);
+            if (container.Exists())
+            {
+                foreach (string imageUrl in imageUrls)
+                {
+                    var letter = new TranslatedLetter { ImageUrl = imageUrl };
+
+                    BlobClient blobClient = container.GetBlobClient(letter.BlobNameWithJsonExtension);
+
+                    BlobDownloadInfo blobDownloadInfo = await blobClient.DownloadAsync();
+
+                    using (StreamReader reader = new StreamReader(blobDownloadInfo.Content, Encoding.UTF8))
+                    {
+                        string content = await reader.ReadToEndAsync();
+                        letter.TranslatedText = content;
+                    }
+
+                    letters.Add(letter);
+                }
+            }
+
+            return await Task.FromResult(letters);
         }
     }
 }
