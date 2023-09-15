@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 
 <!-- Client side libs required  -->
@@ -7,72 +7,69 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-gallery/2.25.2/css/blueimp-gallery.min.css" crossorigin="anonymous">
 
 <style>
-    html {
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    }
+	html {
+		font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	}
 
-    main {
-        margin: 20px;
-    }
+	main {
+		margin: 20px;
+	}
 
-    .dropzone {
-        border: 3px dashed #00a1f1;
-        background: #F0F8FF;
-        margin: 25px;
-        border-radius: 5px;
-        max-width: 400px;
-    }
+	.dropzone {
+		border: 3px dashed #00a1f1;
+		background: #F0F8FF;
+		margin: 25px;
+		border-radius: 5px;
+		max-width: 400px;
+	}
 
-    .dropzone .dz-message {
-        font-weight: 350;
-    }
+		.dropzone .dz-message {
+			font-weight: 350;
+		}
 
-    .dropzone .dz-message .note {
-        font-family: sans-serif;
-        font-size: 18px;
-        font-weight: 200;
-        display: block;
-        margin-top 1.5rem;
-    }
+			.dropzone .dz-message .note {
+				font-family: sans-serif;
+				font-size: 18px;
+				font-weight: 200;
+				display: block;
+				margin-top 1.5rem;
+			}
 </style>
 
 
 <main>
-    <div class="box header">
-        <h1><span class="fa fa-user-circle-o"></span> <span id="page-title">Letter translator</span></h1>
-    </div>
-    
-    <div class="box content">
-        <hr>
-        <h2>Upload photos</h2>
-        <div>
-            <form action="/api/images/upload"
-                 class="dropzone needsclick dz-clickable" 
-                 id="image-upload"
-                 method="post"
-                 enctype="multipart/form">
+	<section class="text-center container">
+		<div class="row py-lg-5">
+			<div class="col-lg-6 col-md-8 mx-auto">
+				<h1 class="fw-light">Upload photos</h1>
+				<p class="lead text-body-secondary">
+					This app has no official privacy policy. Your data will be uploaded to a service in order produce a picture.
+					Your images will be public once you upload them and there is no automated way to remove them.
+				</p>
+				<div>
+					<form action="/api/images/upload"
+						  class="dropzone needsclick dz-clickable"
+						  id="image-upload"
+						  method="post"
+						  enctype="multipart/form"
+						  style="margin-left: 110px;">
 
-                <div class="dz-message needsclick">
-                    <span class="note needsclick">
-                        Drop files here or click to upload.
-                    </span>
-                </div>
-            </form>
-        </div>
-        <h2>Generated Translations</h2>
-          
-        <div id="linksContainer">
-            <!-- Links will be dynamically generated here -->
-        </div>
-        </div>
-    </div>
-    <div class="box footer">
-        <hr>
-        <div class="privacy">
-            <p>This app has no official privacy policy. Your data will be uploaded to a service in order produce a picture.
-                Your images will be public once you upload them and there is no automated way to remove them.</p>
-        </div>
-    </div>
+						<div class="dz-message needsclick">
+							<span class="note needsclick">
+								Drop files here or click to upload.
+							</span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="container px-4 py-5" id="featured-3">
+		<h2 class="pb-2 border-bottom">Generated translations</h2>
+		<div class="row g-4 py-5 row-cols-1 row-cols-lg-3" id="linksContainer">
+			<!-- Links will be dynamically generated here -->
+		</div>
+	</div>
 </main>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -81,44 +78,46 @@
 
 <script>
 
-    function fetchLetters() {
-        $.get("api/Images/letters", function (fetchedLetters) {
-            console.log(fetchedLetters)
-            fetchedLetters.forEach(function (letter) {
+	function fetchLetters() {
+		$.get("api/Images/letters", function (fetchedLetters) {
+			console.log(fetchedLetters)
+			fetchedLetters.forEach(function (letter) {
 
-                var anchor = $("<a>").attr("href", "/letter/" + letter.blobName);
+				var outerdiv = $("<div>").attr("class", "feature col");
+				var anchor = $("<a>").attr("href", "/letter/" + letter.blobName).attr("class", "icon-link");
 
-                // Create an <img> element and set its src attribute
-                var img = $("<img>").attr("src", letter.imageUrl);
-                img.attr("height", "200");
-                var div = $("<div>").text(letter.blobName);
+				// Create an <img> element and set its src attribute
+				var img = $("<img>").attr("src", letter.imageUrl);
+				img.attr("height", "200");
+				var div = $("<div>").text(letter.blobName);
 
-                anchor.append(div);
+				anchor.append(div);
 
-                // Append the <img> element to the <a> element
-                anchor.append(img);
+				// Append the <img> element to the <a> element
+				anchor.append(img);
+				outerdiv.append(anchor);
 
-                $("#linksContainer").append(anchor);
-                $("#linksContainer").append("<br />"); // Add line breaks for readability
-            });
-        });
-    }
+				$("#linksContainer").append(outerdiv);
+				//$("#linksContainer").append("<br />"); // Add line breaks for readability
+			});
+		});
+	}
 
-    // Start first interval
-    fetchLetters();
+	// Start first interval
+	fetchLetters();
 
-    /* Dropzone */
-    // "imageUpload" is the camelized version of the HTML element's ID
-    Dropzone.options.imageUpload = {
-        paramName: "files", // The name that will be used to transfer the file
-        dictDefaultMessage: "Drop files here or Click to Upload",
-        addRemoveLinks: true, // Allows for cancellation of file upload and remove thumbnail
-        init: function() {
-            myDropzone = this;
-            myDropzone.on("success", function(file, response) {
-                console.log("Success");
-                myDropzone.removeFile(file);
-            });                    
-        }
-    };
+	/* Dropzone */
+	// "imageUpload" is the camelized version of the HTML element's ID
+	Dropzone.options.imageUpload = {
+		paramName: "files", // The name that will be used to transfer the file
+		dictDefaultMessage: "Drop files here or Click to Upload",
+		addRemoveLinks: true, // Allows for cancellation of file upload and remove thumbnail
+		init: function () {
+			myDropzone = this;
+			myDropzone.on("success", function (file, response) {
+				console.log("Success");
+				myDropzone.removeFile(file);
+			});
+		}
+	};
 </script>
